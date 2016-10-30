@@ -8,6 +8,10 @@ import (
 )
 
 func main() {
+	loop(get_input())
+}
+
+func get_input() (string, []string) {
 	s := bufio.NewScanner(os.Stdin)
 
 	fmt.Printf("Who sucks? ")
@@ -16,14 +20,19 @@ func main() {
 
 	fmt.Printf("What does %s suck? ", sucker)
 	s.Scan()
-	suckables := strings.Split(s.Text(), ",")
+	raw := strings.Split(s.Text(), ",")
 
-	var trimmed []string
-	for _, str := range suckables {
-		trimmed = append(trimmed, strings.TrimSpace(str))
+	var suckables []string
+	for _, str := range raw {
+		suckables = append(suckables, strings.TrimSpace(str))
 	}
+	return sucker, suckables
+}
 
-	for _, suckable := range trimmed {
-		fmt.Printf("%s sucks %s\n", sucker, suckable)
+func loop(sucker string, suckables []string) {
+	for {
+		for _, suckable := range suckables {
+			fmt.Printf("%s sucks %s\n", sucker, suckable)
+		}
 	}
 }
