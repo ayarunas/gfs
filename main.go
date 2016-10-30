@@ -7,6 +7,8 @@ import (
 
 func main() {
 	for i, v := range os.Args {
-		fmt.Println(i, ": ", v)
+		if i > 0 {
+			fmt.Printf("%d: %s\n", i, v)
+		}
 	}
 }
