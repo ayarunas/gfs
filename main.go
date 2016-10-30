@@ -14,9 +14,13 @@ func main() {
 func get_input() (string, []string) {
 	s := bufio.NewScanner(os.Stdin)
 
-	fmt.Printf("Who sucks? ")
+	fmt.Printf("Who sucks? [Frank] ")
 	s.Scan()
 	sucker := strings.TrimSpace(s.Text())
+
+	if len(sucker) < 1 {
+		sucker = "Frank"
+	}
 
 	fmt.Printf("What does %s suck? ", sucker)
 	s.Scan()
