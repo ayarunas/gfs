@@ -83,6 +83,7 @@ func loop(sucker string, suckables []string) {
 
 	for {
 		for _, suckable := range suckables {
+			// Need to figure out how to build a multicolored string before printing
 			gput.Setaf(colors["green"])
 			fmt.Printf(get_padding(&spaces, &is_decreasing))
 			fmt.Printf("%s", sucker)
@@ -107,6 +108,7 @@ func trap_and_tidy() {
 	}()
 
 	<-done
+
 	gput.Setaf(colors["blue"])
 	fmt.Printf("\n\nThank you for playing 'Frank Sucks'\n")
 	fmt.Printf("Resetting colors...\n\n")
