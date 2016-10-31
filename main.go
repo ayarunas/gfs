@@ -4,10 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 )
 
 func main() {
+	go trap_and_tidy()
 	loop(get_input())
 }
 
@@ -37,6 +41,24 @@ func loop(sucker string, suckables []string) {
 	for {
 		for _, suckable := range suckables {
 			fmt.Printf("%s sucks %s\n", sucker, suckable)
+			time.Sleep(500 * time.Millisecond)
 		}
 	}
+}
+
+func trap_and_tidy() {
+	signals := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		sig := <-signals
+		fmt.Println(sig)
+		done <- true
+	}()
+
+	<-done
+	fmt.Printf("\n\nThank you for playing 'Frank Sucks'\n")
+	fmt.Printf("Resetting colors...\n\nGoodbye!\n")
+	os.Exit(0)
 }
