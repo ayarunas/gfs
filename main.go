@@ -103,7 +103,6 @@ func trap_and_tidy() {
 
 	go func() {
 		sig := <-signals
-		fmt.Println(sig)
 		done <- true
 	}()
 
