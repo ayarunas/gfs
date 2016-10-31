@@ -8,7 +8,17 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/maxmclau/gput"
 )
+
+var colors = map[string]int{
+	"blue":        39,
+	"red":         9,
+	"yellow":      11,
+	"green":       10,
+	"medium_grey": 240,
+}
 
 func main() {
 	go trap_and_tidy()
@@ -18,7 +28,13 @@ func main() {
 func get_input() (string, []string) {
 	s := bufio.NewScanner(os.Stdin)
 
-	fmt.Printf("Who sucks? [Frank] ")
+	gput.Setaf(colors["blue"])
+	fmt.Printf("Who sucks?")
+
+	gput.Setaf(colors["medium_grey"])
+	fmt.Printf(" [Frank] ")
+
+	gput.Sgr0()
 	s.Scan()
 	sucker := strings.TrimSpace(s.Text())
 
@@ -26,7 +42,10 @@ func get_input() (string, []string) {
 		sucker = "Frank"
 	}
 
+	gput.Setaf(colors["blue"])
 	fmt.Printf("What does %s suck? ", sucker)
+
+	gput.Sgr0()
 	s.Scan()
 	raw := strings.Split(s.Text(), ",")
 
@@ -40,7 +59,12 @@ func get_input() (string, []string) {
 func loop(sucker string, suckables []string) {
 	for {
 		for _, suckable := range suckables {
-			fmt.Printf("%s sucks %s\n", sucker, suckable)
+			gput.Setaf(colors["green"])
+			fmt.Printf("%s", sucker)
+			gput.Setaf(colors["yellow"])
+			fmt.Printf(" sucks ")
+			gput.Setaf(colors["red"])
+			fmt.Printf("%s\n", suckable)
 			time.Sleep(500 * time.Millisecond)
 		}
 	}
@@ -58,7 +82,10 @@ func trap_and_tidy() {
 	}()
 
 	<-done
+	gput.Setaf(colors["blue"])
 	fmt.Printf("\n\nThank you for playing 'Frank Sucks'\n")
-	fmt.Printf("Resetting colors...\n\nGoodbye!\n")
+	fmt.Printf("Resetting colors...\n\n")
+	gput.Sgr0()
+	fmt.Printf("Goodbye!\n\n")
 	os.Exit(0)
 }
