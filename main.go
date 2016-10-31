@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	kp "gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/maxmclau/gput"
 )
 
@@ -22,6 +24,9 @@ var colors = map[string]int{
 }
 
 func main() {
+	kp.Version("0.0.1")
+	kp.Parse()
+
 	go trap_and_tidy()
 	loop(get_input())
 }
@@ -102,7 +107,7 @@ func trap_and_tidy() {
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		sig := <-signals
+		<-signals
 		done <- true
 	}()
 
