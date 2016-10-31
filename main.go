@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"os/signal"
@@ -56,10 +57,34 @@ func get_input() (string, []string) {
 	return sucker, suckables
 }
 
+func get_padding(spaces *int, is_decreasing *bool) string {
+	var b bytes.Buffer
+
+	for i := 1; i <= *spaces; i++ {
+		b.WriteString(" ")
+	}
+
+	if *is_decreasing {
+		*spaces--
+	} else {
+		*spaces++
+	}
+
+	if 5 == *spaces || 0 == *spaces {
+		*is_decreasing = !*is_decreasing
+	}
+
+	return b.String()
+}
+
 func loop(sucker string, suckables []string) {
+	spaces := 0
+	is_decreasing := false
+
 	for {
 		for _, suckable := range suckables {
 			gput.Setaf(colors["green"])
+			fmt.Printf(get_padding(&spaces, &is_decreasing))
 			fmt.Printf("%s", sucker)
 			gput.Setaf(colors["yellow"])
 			fmt.Printf(" sucks ")
