@@ -10,9 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	kp "gopkg.in/alecthomas/kingpin.v2"
-
 	"github.com/maxmclau/gput"
+	kp "gopkg.in/alecthomas/kingpin.v2"
 )
 
 var colors = map[string]int{
@@ -24,11 +23,16 @@ var colors = map[string]int{
 }
 
 func main() {
+	wobble := kp.Flag("wobble", "Enable wobbling by setting a max leftpad").Default("0").Short('w').Int()
 	kp.Version("0.0.1")
+	kp.CommandLine.VersionFlag.Short('v')
+	kp.CommandLine.HelpFlag.Short('h')
 	kp.Parse()
 
 	go trap_and_tidy()
-	loop(get_input())
+
+	name, items := get_input()
+	loop(name, items, wobble)
 }
 
 func get_input() (string, []string) {
@@ -62,7 +66,7 @@ func get_input() (string, []string) {
 	return sucker, suckables
 }
 
-func get_padding(spaces *int, is_decreasing *bool) string {
+func get_padding(spaces *int, is_decreasing *bool, wobble *int) string {
 	var b bytes.Buffer
 
 	for i := 1; i <= *spaces; i++ {
@@ -75,14 +79,14 @@ func get_padding(spaces *int, is_decreasing *bool) string {
 		*spaces++
 	}
 
-	if 5 == *spaces || 0 == *spaces {
+	if *wobble == *spaces || 0 == *spaces {
 		*is_decreasing = !*is_decreasing
 	}
 
 	return b.String()
 }
 
-func loop(sucker string, suckables []string) {
+func loop(sucker string, suckables []string, wobble *int) {
 	spaces := 0
 	is_decreasing := false
 
@@ -90,7 +94,7 @@ func loop(sucker string, suckables []string) {
 		for _, suckable := range suckables {
 			// Need to figure out how to build a multicolored string before printing
 			gput.Setaf(colors["green"])
-			fmt.Printf(get_padding(&spaces, &is_decreasing))
+			fmt.Printf(get_padding(&spaces, &is_decreasing, wobble))
 			fmt.Printf("%s", sucker)
 			gput.Setaf(colors["yellow"])
 			fmt.Printf(" sucks ")
