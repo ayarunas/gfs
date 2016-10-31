@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	kp "gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/maxmclau/gput"
 )
 
@@ -22,6 +24,9 @@ var colors = map[string]int{
 }
 
 func main() {
+	kp.Version("0.0.1")
+	kp.Parse()
+
 	go trap_and_tidy()
 	loop(get_input())
 }
@@ -98,15 +103,9 @@ func loop(sucker string, suckables []string) {
 
 func trap_and_tidy() {
 	signals := make(chan os.Signal, 1)
-	done := make(chan bool, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
-	go func() {
-		sig := <-signals
-		done <- true
-	}()
-
-	<-done
+	<-signals
 
 	gput.Setaf(colors["blue"])
 	fmt.Printf("\n\nThank you for playing 'Frank Sucks'\n")
