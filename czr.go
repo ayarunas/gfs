@@ -43,8 +43,10 @@ var medium_grey = make_colorizer(colors["medium_grey"])
 
 func reset_colors() {
 	reset, err := exec.Command("tput", "sgr0").Output()
+
 	if err != nil {
 		os.Exit(1)
 	}
+
 	fmt.Printf(string(reset))
 }

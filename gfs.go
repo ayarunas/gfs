@@ -71,6 +71,7 @@ func get_padding(spaces *int, is_decreasing *bool, wobble *int) string {
 	if *wobble == *spaces || 0 == *spaces {
 		*is_decreasing = !*is_decreasing
 	}
+
 	return b.String()
 }
 
