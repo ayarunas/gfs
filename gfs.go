@@ -10,17 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/maxmclau/gput"
 	kp "gopkg.in/alecthomas/kingpin.v2"
 )
-
-var colors = map[string]int{
-	"blue":        39,
-	"red":         9,
-	"yellow":      11,
-	"green":       10,
-	"medium_grey": 240,
-}
 
 func main() {
 	wobble := kp.Flag("wobble", "Enable wobbling by setting a max leftpad").Default("0").Short('w').Int()
@@ -38,13 +29,10 @@ func main() {
 func get_input() (string, []string) {
 	s := bufio.NewScanner(os.Stdin)
 
-	gput.Setaf(colors["blue"])
-	fmt.Printf("Who sucks?")
+	fmt.Printf(blue("Who sucks?"))
+	fmt.Printf(medium_grey(" [Frank] "))
+	reset_colors()
 
-	gput.Setaf(colors["medium_grey"])
-	fmt.Printf(" [Frank] ")
-
-	gput.Sgr0()
 	s.Scan()
 	sucker := strings.TrimSpace(s.Text())
 
@@ -52,10 +40,8 @@ func get_input() (string, []string) {
 		sucker = "Frank"
 	}
 
-	gput.Setaf(colors["blue"])
-	fmt.Printf("What does %s suck? ", sucker)
-
-	gput.Sgr0()
+	fmt.Printf(blue("What does %s suck? "), sucker)
+	reset_colors()
 	s.Scan()
 	raw := strings.Split(s.Text(), ",")
 
@@ -67,8 +53,11 @@ func get_input() (string, []string) {
 }
 
 func get_padding(spaces *int, is_decreasing *bool, wobble *int) string {
-	var b bytes.Buffer
+	if *wobble == 0 {
+		return ""
+	}
 
+	var b bytes.Buffer
 	for i := 1; i <= *spaces; i++ {
 		b.WriteString(" ")
 	}
@@ -82,7 +71,6 @@ func get_padding(spaces *int, is_decreasing *bool, wobble *int) string {
 	if *wobble == *spaces || 0 == *spaces {
 		*is_decreasing = !*is_decreasing
 	}
-
 	return b.String()
 }
 
@@ -92,14 +80,8 @@ func loop(sucker string, suckables []string, wobble *int) {
 
 	for {
 		for _, suckable := range suckables {
-			// Need to figure out how to build a multicolored string before printing
-			gput.Setaf(colors["green"])
-			fmt.Printf(get_padding(&spaces, &is_decreasing, wobble))
-			fmt.Printf("%s", sucker)
-			gput.Setaf(colors["yellow"])
-			fmt.Printf(" sucks ")
-			gput.Setaf(colors["red"])
-			fmt.Printf("%s\n", suckable)
+			fmt.Printf("%s"+green(sucker)+yellow(" sucks ")+red(suckable)+"\n",
+				get_padding(&spaces, &is_decreasing, wobble))
 			time.Sleep(500 * time.Millisecond)
 		}
 	}
@@ -111,10 +93,9 @@ func trap_and_tidy() {
 
 	<-signals
 
-	gput.Setaf(colors["blue"])
-	fmt.Printf("\n\nThank you for playing 'Frank Sucks'\n")
-	fmt.Printf("Resetting colors...\n\n")
-	gput.Sgr0()
+	fmt.Printf(blue("\n\nThank you for playing 'Frank Sucks'\n"))
+	fmt.Printf(blue("Resetting colors...\n\n"))
+	reset_colors()
 	fmt.Printf("Goodbye!\n\n")
 	os.Exit(0)
 }
