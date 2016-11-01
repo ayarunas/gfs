@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ravindersahni/czr"
+
 	kp "gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -31,7 +33,7 @@ func get_input() (string, []string) {
 
 	fmt.Printf(blue("Who sucks?"))
 	fmt.Printf(medium_grey(" [Frank] "))
-	reset_colors()
+	czr.Reset()
 
 	s.Scan()
 	sucker := strings.TrimSpace(s.Text())
@@ -41,7 +43,7 @@ func get_input() (string, []string) {
 	}
 
 	fmt.Printf(blue("What does %s suck? "), sucker)
-	reset_colors()
+	czr.Reset()
 	s.Scan()
 	raw := strings.Split(s.Text(), ",")
 
@@ -96,7 +98,7 @@ func trap_and_tidy() {
 
 	fmt.Printf(blue("\n\nThank you for playing 'Frank Sucks'\n"))
 	fmt.Printf(blue("Resetting colors...\n\n"))
-	reset_colors()
+	czr.Reset()
 	fmt.Printf("Goodbye!\n\n")
 	os.Exit(0)
 }
