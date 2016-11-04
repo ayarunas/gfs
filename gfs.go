@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"regexp"
 	"strings"
 	"syscall"
 	"time"
@@ -30,13 +31,23 @@ func main() {
 
 func get_input() (string, []string) {
 	s := bufio.NewScanner(os.Stdin)
+	var sucker string
 
-	fmt.Printf(blue("Who sucks?"))
-	fmt.Printf(medium_grey(" [Frank] "))
-	czr.Reset()
+	for {
+		fmt.Printf(blue("Who sucks?"))
+		fmt.Printf(medium_grey(" [Frank] "))
+		czr.Reset()
 
-	s.Scan()
-	sucker := strings.TrimSpace(s.Text())
+		s.Scan()
+		sucker = strings.TrimSpace(s.Text())
+
+		match, _ := regexp.MatchString("(?i)r.*a.*v.*i", sucker)
+		if match == false {
+			break
+		}
+
+		fmt.Printf(blue("No, Ravi is awesome\n"))
+	}
 
 	if len(sucker) < 1 {
 		sucker = "Frank"
