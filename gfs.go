@@ -107,7 +107,7 @@ func trap_and_tidy() {
 
 	<-signals
 
-	fmt.Printf(blue("\n\nThank you for playing 'Frank Sucks'\n"))
+	fmt.Printf(blue("\n\nThank you for playing '") + yellow("Frank Sucks") + blue("'\n"))
 	fmt.Printf(blue("Resetting colors...\n\n"))
 	czr.Reset()
 	fmt.Printf("Goodbye!\n\n")
