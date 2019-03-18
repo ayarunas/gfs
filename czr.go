@@ -1,6 +1,6 @@
 package main
 
-import "github.com/ravindersahni/czr"
+import czr "github.com/ravindersahni/colorizer"
 
 var colors = map[string]int{
 	"blue":        39,
