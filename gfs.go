@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ravindersahni/czr"
+	czr "github.com/ravindersahni/colorizer"
 
 	kp "gopkg.in/alecthomas/kingpin.v2"
 )
